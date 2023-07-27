@@ -1,0 +1,8 @@
+name=lander
+author=Josh Farrant
+description=Hi David
+bundleID=com.farrant.lander
+version=0.1
+buildNumber=102
+imagePath=SystemAssets
+contentWarning=This game contains janky code.
