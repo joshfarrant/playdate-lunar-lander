@@ -1,12 +1,15 @@
-
 import 'CoreLibs/sprites.lua'
 import 'CoreLibs/graphics.lua'
 
 gfx = playdate.graphics
+geo = playdate.geometry
+
+gfx.setBackgroundColor(gfx.kColorBlack)
 
 gfx.setColor(gfx.kColorBlack)
 gfx.fillRect(0, 0, 400, 240)
-gfx.setBackgroundColor(gfx.kColorBlack)
+gfx.setColor(gfx.kColorWhite)
+
 
 local GRAVITY = 0.015
 local THRUST = 0.05
@@ -31,9 +34,19 @@ function getThrust()
 	return clamped / MAX_THRUST
 end
 
+function randomSpeed()
+	local dx = randomFloatBetween(-2, 2)
+	local dy = randomFloatBetween(-0.65, 0.5)
 
-local dx = randomFloatBetween(-1, 1)
-local dy = randomFloatBetween(-0.5, 0.5)
+	return dx, dy
+end
+
+local dx, dy = randomSpeed()
+
+
+platform = geo.rect.new(100,100,100,10)
+gfx.fillRect(platform)
+
 
 local imageTable = gfx.imagetable.new('Images/lander', 5)
 
@@ -46,14 +59,12 @@ lander:setCenter(0.5, 0.33)
 lander:moveTo(200, 20)
 lander:add()
 
-local landerAnimationLength = imageTable:getLength() - 1
 local animationFrame = 1;
 local framesPerThrustLevel = 4
 local thrustLevel = 0
 
 playdate.AButtonDown = function ()
-	dx = randomFloatBetween(-1, 1)
-	dy = randomFloatBetween(-0.5, 0.5)
+	dx, dy = randomSpeed()
 	lander:moveTo(200, 20)
 end
 
@@ -66,9 +77,10 @@ lander.update = function()
 
 	lander:setRotation(angleDeg)
 
-	local thrust = getThrust()
 	local tx = 0
 	local ty = 0
+
+	local thrust = getThrust()
 
 	if thrust > 0 then
 		tx = math.sin(angleRadians) * thrust * THRUST
